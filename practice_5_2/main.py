@@ -1,4 +1,6 @@
 import math
+import matplotlib.pyplot as plt
+from prettytable import PrettyTable
 
 
 def superscript(n):
@@ -67,8 +69,8 @@ def first():
     a = round(a, 2)
     b = round(b, 2)
     if b < 0:
-        return f"y = {a}•x - {abs(b)}"
-    return f"y = {a}•x - {b}"
+        return f"y = {a}•x - {abs(b)}", a, b
+    return f"y = {a}•x - {b}", a, b
 
 
 def second():
@@ -80,7 +82,7 @@ def second():
     a = round(a, 2)
     b = math.e ** b
     b = round(b, 2)
-    return f"y = {b}•x{superscript(a)}"
+    return f"y = {b}•x{superscript(a)}", a, b
 
 
 def third():
@@ -92,7 +94,7 @@ def third():
     a = round(a, 2)
     b = math.e ** b
     b = round(b, 2)
-    return f"y = {b}•e{superscript(a)}x"
+    return f"y = {b}•e{superscript(a)}x", a, b
 
 
 def fourth():
@@ -105,30 +107,84 @@ def fourth():
     a = round(a, 2)
     b = round(b, 2)
     c = round(c, 2)
-    return f"y = {a}x² + {b}x + {c}"
+    if b < 0:
+        if c < 0:
+            return f"y = {a}x² - {abs(b)}x - {abs(c)}", a, b, c
+        return f"y = {a}x² - {abs(b)}x + {c}", a, b, c
+    if c < 0:
+        return f"y = {a}x² + {b}x - {abs(c)}", a, b, c
+    return f"y = {a}x² + {b}x + {c}", a, b, c
 
 
 x_nodes = [2, 5, 8, 11, 14, 17]
-y_nodes = [2.1, 3.4, 4.2, 4.6, 5.2, 5.4]
+y_nodes = [2.1, 1.3, 1, 0.9, 0.8, 0.72]
 n = len(x_nodes)
+
+
+def create_graphic():
+    # Заменяем x_nodes на x_values
+    x_values = [i / 10 for i in range(20, 170)]
+    a, b = list(first()[1:])
+    y_1_nodes = [a * x + b for x in x_values]
+
+    a, b = list(second()[1:])
+    y_2_nodes = [b * x ** a for x in x_values]
+
+    a, b = list(third()[1:])
+    y_3_nodes = [b * math.e ** (a * x) for x in x_values]
+
+    a, b, c = list(fourth()[1:])
+    y_4_nodes = [a * x ** 2 + b * x + c for x in x_values]
+
+    plt.scatter(x_nodes, y_nodes)
+    plt.plot(x_values, y_1_nodes, label=first()[0])
+    plt.plot(x_values, y_2_nodes, label=second()[0])
+    plt.plot(x_values, y_3_nodes, label=third()[0])
+    plt.plot(x_values, y_4_nodes, label=fourth()[0])
+    # a, b = list(first()[1:])
+    # y_1_nodes = [a * x + b for x in x_nodes]
+    #
+    # a, b = list(second()[1:])
+    # y_2_nodes = [b * x ** a for x in x_nodes]
+    #
+    # a, b = list(third()[1:])
+    # y_3_nodes = [b * math.e ** (a * x) for x in x_nodes]
+    #
+    # a, b, c = list(fourth()[1:])
+    # y_4_nodes = [a * x ** 2 + b * x + c for x in x_nodes]
+    # plt.scatter(x_nodes, y_nodes)
+    # plt.plot(x_nodes, y_1_nodes, label=first()[0])
+    # plt.plot(x_nodes, y_2_nodes, label=second()[0])
+    # plt.plot(x_nodes, y_3_nodes, label=third()[0])
+    # plt.plot(x_nodes, y_4_nodes, label=fourth()[0])
+    plt.legend()
+    plt.show()
+    table = PrettyTable(["Функция", "Различия"])
+    table.add_row(["Линейная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_1_nodes)])])
+    table.add_row(["Степенная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_2_nodes)])])
+    table.add_row(["Показательная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_3_nodes)])])
+    table.add_row(["Квадратичная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_4_nodes)])])
+    print(table)
 
 
 def main():
     print("Первый номер\n".center(50))
-    print(first() + "\n")
+    print(first()[0] + "\n")
     print("=================================".center(50))
 
     print("Второй номер\n".center(50))
-    print(second() + "\n")
+    print(second()[0] + "\n")
     print("=================================".center(50))
 
     print("Третий номер\n".center(50))
-    print(third() + "\n")
+    print(third()[0] + "\n")
     print("=================================".center(50))
 
     print("Четвертый номер\n".center(50))
-    print(fourth())
+    print(fourth()[0] + "\n")
     print("=================================".center(50))
+
+    create_graphic()
 
 
 main()
