@@ -7,7 +7,7 @@ def solve_func(a: list[list[int]], b: list[int]):
     m = matrix.append_column(a, b)
 
     t = PrettyTable([*[f"x{i}" for i in range(len(b))], "Свободные члены",
-                    "Результат подстановки", "Невязка"])
+                     "Результат подстановки", "Невязка"])
 
     row = []
 
