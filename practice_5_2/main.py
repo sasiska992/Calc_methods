@@ -122,8 +122,7 @@ n = len(x_nodes)
 
 
 def create_graphic():
-    # # Заменяем x_nodes на x_values
-    # x_values = [i / 10 for i in range(20, 170)]
+    # x_values = [i / 10 for i in range(x_nodes[0] * 10, x_nodes[-1] * 10)]
     # a, b = list(first()[1:])
     # y_1_nodes = [a * x + b for x in x_values]
     #
@@ -141,6 +140,8 @@ def create_graphic():
     # plt.plot(x_values, y_2_nodes, label=second()[0])
     # plt.plot(x_values, y_3_nodes, label=third()[0])
     # plt.plot(x_values, y_4_nodes, label=fourth()[0])
+
+
     a, b = list(first()[1:])
     y_1_nodes = [a * x + b for x in x_nodes]
 
@@ -157,6 +158,8 @@ def create_graphic():
     plt.plot(x_nodes, y_2_nodes, label=second()[0])
     plt.plot(x_nodes, y_3_nodes, label=third()[0])
     plt.plot(x_nodes, y_4_nodes, label=fourth()[0])
+
+
     plt.legend()
     plt.show()
     table = PrettyTable(["Функция", "Δy"])
