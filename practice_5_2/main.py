@@ -70,7 +70,7 @@ def first():
     b = round(b, 2)
     if b < 0:
         return f"y = {a}•x - {abs(b)}", a, b
-    return f"y = {a}•x - {b}", a, b
+    return f"y = {a}•x + {b}", a, b
 
 
 def second():
@@ -116,54 +116,54 @@ def fourth():
     return f"y = {a}x² + {b}x + {c}", a, b, c
 
 
-x_nodes = [2, 5, 8, 11, 14, 17]
-y_nodes = [2.1, 1.3, 1, 0.9, 0.8, 0.72]
+x_nodes = [2, 6, 10, 14, 18, 22]
+y_nodes = [3.1, 6.7, 9.5, 11.9, 14, 15.5]
 n = len(x_nodes)
 
 
 def create_graphic():
-    # Заменяем x_nodes на x_values
-    x_values = [i / 10 for i in range(20, 170)]
-    a, b = list(first()[1:])
-    y_1_nodes = [a * x + b for x in x_values]
-
-    a, b = list(second()[1:])
-    y_2_nodes = [b * x ** a for x in x_values]
-
-    a, b = list(third()[1:])
-    y_3_nodes = [b * math.e ** (a * x) for x in x_values]
-
-    a, b, c = list(fourth()[1:])
-    y_4_nodes = [a * x ** 2 + b * x + c for x in x_values]
-
-    plt.scatter(x_nodes, y_nodes)
-    plt.plot(x_values, y_1_nodes, label=first()[0])
-    plt.plot(x_values, y_2_nodes, label=second()[0])
-    plt.plot(x_values, y_3_nodes, label=third()[0])
-    plt.plot(x_values, y_4_nodes, label=fourth()[0])
+    # # Заменяем x_nodes на x_values
+    # x_values = [i / 10 for i in range(20, 170)]
     # a, b = list(first()[1:])
-    # y_1_nodes = [a * x + b for x in x_nodes]
+    # y_1_nodes = [a * x + b for x in x_values]
     #
     # a, b = list(second()[1:])
-    # y_2_nodes = [b * x ** a for x in x_nodes]
+    # y_2_nodes = [b * x ** a for x in x_values]
     #
     # a, b = list(third()[1:])
-    # y_3_nodes = [b * math.e ** (a * x) for x in x_nodes]
+    # y_3_nodes = [b * math.e ** (a * x) for x in x_values]
     #
     # a, b, c = list(fourth()[1:])
-    # y_4_nodes = [a * x ** 2 + b * x + c for x in x_nodes]
+    # y_4_nodes = [a * x ** 2 + b * x + c for x in x_values]
+    #
     # plt.scatter(x_nodes, y_nodes)
-    # plt.plot(x_nodes, y_1_nodes, label=first()[0])
-    # plt.plot(x_nodes, y_2_nodes, label=second()[0])
-    # plt.plot(x_nodes, y_3_nodes, label=third()[0])
-    # plt.plot(x_nodes, y_4_nodes, label=fourth()[0])
+    # plt.plot(x_values, y_1_nodes, label=first()[0])
+    # plt.plot(x_values, y_2_nodes, label=second()[0])
+    # plt.plot(x_values, y_3_nodes, label=third()[0])
+    # plt.plot(x_values, y_4_nodes, label=fourth()[0])
+    a, b = list(first()[1:])
+    y_1_nodes = [a * x + b for x in x_nodes]
+
+    a, b = list(second()[1:])
+    y_2_nodes = [b * x ** a for x in x_nodes]
+
+    a, b = list(third()[1:])
+    y_3_nodes = [b * math.e ** (a * x) for x in x_nodes]
+
+    a, b, c = list(fourth()[1:])
+    y_4_nodes = [a * x ** 2 + b * x + c for x in x_nodes]
+    plt.scatter(x_nodes, y_nodes)
+    plt.plot(x_nodes, y_1_nodes, label=first()[0])
+    plt.plot(x_nodes, y_2_nodes, label=second()[0])
+    plt.plot(x_nodes, y_3_nodes, label=third()[0])
+    plt.plot(x_nodes, y_4_nodes, label=fourth()[0])
     plt.legend()
     plt.show()
-    table = PrettyTable(["Функция", "Различия"])
+    table = PrettyTable(["Функция", "Δy"])
     table.add_row(["Линейная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_1_nodes)])])
     table.add_row(["Степенная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_2_nodes)])])
     table.add_row(["Показательная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_3_nodes)])])
-    table.add_row(["Квадратичная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_4_nodes)])])
+    table.add_row(["Квадратичная", sum([(y[0] - y[1]) ** 2 for y in list(zip(y_nodes, y_4_nodes))])])
     print(table)
 
 
