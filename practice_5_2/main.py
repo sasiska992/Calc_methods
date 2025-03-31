@@ -17,8 +17,11 @@ def superscript(n):
 
     # Обрабатываем дробную часть, если она есть
     if len(parts) > 1:
-        decimal_part = ''.join(superscripts.get(digit, digit) for digit in parts[1][:2])  # Берем только два знака
-        return f"{whole_part}·{decimal_part}"  # Используем верхнюю точку (U+00B7)
+        decimal_part = ''.join(superscripts.get(digit, digit)
+                               # Берем только два знака
+                               for digit in parts[1][:2])
+        # Используем верхнюю точку (U+00B7)
+        return f"{whole_part}·{decimal_part}"
 
     return whole_part
 
@@ -62,7 +65,8 @@ def ln(value):
 
 def first():
     matrix = [
-        [sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]), sum([x_nodes[i] * y_nodes[i] for i in range(n)])],
+        [sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]),
+         sum([x_nodes[i] * y_nodes[i] for i in range(n)])],
         [sum([x for x in x_nodes]), n, sum([y for y in y_nodes])]
     ]
     a, b = gauss(matrix)
@@ -75,7 +79,8 @@ def first():
 
 def second():
     matrix = [
-        [sum([ln(x) ** 2 for x in x_nodes]), sum([ln(x) for x in x_nodes]), sum([ln(x_nodes[i]) * ln(y_nodes[i]) for i in range(n)])],
+        [sum([ln(x) ** 2 for x in x_nodes]), sum([ln(x) for x in x_nodes]),
+         sum([ln(x_nodes[i]) * ln(y_nodes[i]) for i in range(n)])],
         [sum([ln(x) for x in x_nodes]), n, sum([ln(y) for y in y_nodes])]
     ]
     a, b = gauss(matrix)
@@ -87,7 +92,8 @@ def second():
 
 def third():
     matrix = [
-        [sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]), sum([x_nodes[i] * ln(y_nodes[i]) for i in range(n)])],
+        [sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]),
+         sum([x_nodes[i] * ln(y_nodes[i]) for i in range(n)])],
         [sum([x for x in x_nodes]), n, sum([ln(y) for y in y_nodes])]
     ]
     a, b = gauss(matrix)
@@ -99,9 +105,12 @@ def third():
 
 def fourth():
     matrix = [
-        [sum([x ** 4 for x in x_nodes]), sum([x ** 3 for x in x_nodes]), sum([x ** 2 for x in x_nodes]), sum([x_nodes[i] ** 2 * y_nodes[i] for i in range(n)])],
-        [sum([x ** 3 for x in x_nodes]), sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]), sum([x_nodes[i] * y_nodes[i] for i in range(n)])],
-        [sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]), n, sum([y_nodes[i] for i in range(n)])],
+        [sum([x ** 4 for x in x_nodes]), sum([x ** 3 for x in x_nodes]), sum([x **
+                                                                              2 for x in x_nodes]), sum([x_nodes[i] ** 2 * y_nodes[i] for i in range(n)])],
+        [sum([x ** 3 for x in x_nodes]), sum([x ** 2 for x in x_nodes]),
+         sum([x for x in x_nodes]), sum([x_nodes[i] * y_nodes[i] for i in range(n)])],
+        [sum([x ** 2 for x in x_nodes]), sum([x for x in x_nodes]),
+         n, sum([y_nodes[i] for i in range(n)])],
     ]
     a, b, c = gauss(matrix)
     a = round(a, 2)
@@ -141,7 +150,6 @@ def create_graphic():
     # plt.plot(x_values, y_3_nodes, label=third()[0])
     # plt.plot(x_values, y_4_nodes, label=fourth()[0])
 
-
     a, b = list(first()[1:])
     y_1_nodes = [a * x + b for x in x_nodes]
 
@@ -159,15 +167,18 @@ def create_graphic():
     plt.plot(x_nodes, y_3_nodes, label=third()[0])
     plt.plot(x_nodes, y_4_nodes, label=fourth()[0])
 
-
+    table = PrettyTable(["Функция", "Δy"])
+    table.add_row(
+        ["Линейная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_1_nodes)])])
+    table.add_row(
+        ["Степенная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_2_nodes)])])
+    table.add_row(["Показательная", sum(
+        [(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_3_nodes)])])
+    table.add_row(["Квадратичная", sum(
+        [(y[0] - y[1]) ** 2 for y in list(zip(y_nodes, y_4_nodes))])])
+    print(table)
     plt.legend()
     plt.show()
-    table = PrettyTable(["Функция", "Δy"])
-    table.add_row(["Линейная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_1_nodes)])])
-    table.add_row(["Степенная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_2_nodes)])])
-    table.add_row(["Показательная", sum([(y[0] - y[1]) ** 2 for y in zip(y_nodes, y_3_nodes)])])
-    table.add_row(["Квадратичная", sum([(y[0] - y[1]) ** 2 for y in list(zip(y_nodes, y_4_nodes))])])
-    print(table)
 
 
 def main():

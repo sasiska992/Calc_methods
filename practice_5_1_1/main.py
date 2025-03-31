@@ -34,16 +34,23 @@ def plot_interpolation(a, b, n):
 
     x_nodes_inter = [a + i * (b - a) / 100 for i in range(101)]
 
-    y_inter_eq = [lagrange_interpolation(x, x_nodes_eq, y_nodes_eq) for x in x_nodes_inter]
+    y_inter_eq = [lagrange_interpolation(
+        x, x_nodes_eq, y_nodes_eq) for x in x_nodes_inter]
 
-    y_inter_cheb = [lagrange_interpolation(x, x_nodes_cheb, y_nodes_cheb) for x in x_nodes_inter]
+    y_inter_cheb = [lagrange_interpolation(
+        x, x_nodes_cheb, y_nodes_cheb) for x in x_nodes_inter]
 
     plt.figure(figsize=(12, 8))
-    plt.plot(x_nodes_inter, [f(x) for x in x_nodes_inter], label='f(x)', color='blue', linewidth=2)
-    plt.scatter(x_nodes_eq, y_nodes_eq, color='red', label='Равностоящие узлы', zorder=5)
-    plt.plot(x_nodes_inter, y_inter_eq, label='Интерполяционный полином (равностоящие узлы)', color='green', linestyle='solid')
-    plt.scatter(x_nodes_cheb, y_nodes_cheb, color='orange', label='Чебышёвские узлы', zorder=5)
-    plt.plot(x_nodes_inter, y_inter_cheb, label='Интерполяционный полином (Чебышёвские узлы)', color='purple', linestyle='--')
+    plt.plot(x_nodes_inter, [f(x) for x in x_nodes_inter],
+             label='f(x)', color='blue', linewidth=2)
+    plt.scatter(x_nodes_eq, y_nodes_eq, color='red',
+                label='Равностоящие узлы', zorder=5)
+    plt.plot(x_nodes_inter, y_inter_eq, label='Интерполяционный полином (равностоящие узлы)',
+             color='green', linestyle='solid')
+    plt.scatter(x_nodes_cheb, y_nodes_cheb, color='orange',
+                label='Чебышёвские узлы', zorder=5)
+    plt.plot(x_nodes_inter, y_inter_cheb,
+             label='Интерполяционный полином (Чебышёвские узлы)', color='purple', linestyle='--')
     plt.title('Интерполяция Лагранжа: Равностоящие и Чебышёвские узлы')
     plt.xlabel('x')
     plt.ylabel('y')
