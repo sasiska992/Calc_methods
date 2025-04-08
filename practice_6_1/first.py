@@ -19,10 +19,10 @@ def right_rectangles(a, b):
 
 
 def main():
-    x_nodes = [i / 10 for i in range(21)]
+    x_nodes = [i / 10 for i in range(4)]
     summ = 0
     print("Метод левых прямоугольников".center(80))
-    table = PrettyTable(["x", "erf(x)", "∫f(x)", "Δ(erf(x) - ∫f(x))"])
+    table = PrettyTable(["x", "erf(x)", "∫f(x)", "Отклонение"])
     temp = 0
     for i in range(len(x_nodes) - 1):
         temp += math.erf(x_nodes[i + 1])
@@ -39,7 +39,7 @@ def main():
 
     summ = 0
     print("Метод средних прямоугольников".center(80))
-    table = PrettyTable(["x", "erf(x)", "∫f(x)", "Δ(erf(x) - ∫f(x))"])
+    table = PrettyTable(["x", "erf(x)", "∫f(x)", "Отклонение"])
     temp = 0
     for i in range(len(x_nodes) - 1):
         summ += middle_rectangles(x_nodes[i], x_nodes[i + 1])
@@ -55,7 +55,7 @@ def main():
 
     summ = 0
     print("Метод правых прямоугольников".center(80))
-    table = PrettyTable(["x", "erf(x)", "∫f(x)", "Δ(erf(x) - ∫f(x))"])
+    table = PrettyTable(["x", "erf(x)", "∫f(x)", "Отклонение"])
     temp = 0
     for i in range(len(x_nodes) - 1):
         temp += math.erf(x_nodes[i + 1])
@@ -68,6 +68,10 @@ def main():
                         "Cумарное значение ∫f(x)", "Суммарное отклонение"])
     table.add_row([temp, summ, abs(summ - temp)])
     print(table)
+    # print([f"erf({x}) = {math.erf(x)
+    #                      }, от 0 до 0.5 - {middle_rectangles(0, x)}" for x in x_nodes])
+    # print(f"erf(0.5) = {math.erf(0.5)
+    #                     }, от 0.4 до 0.5 - {middle_rectangles(0.4, 0.5)}")
 
 
 if __name__ == "__main__":
