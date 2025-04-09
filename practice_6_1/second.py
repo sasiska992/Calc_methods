@@ -18,6 +18,21 @@ def trapezoid(h_nodes, h):
     return result
 
 
+def simson(x_nodes):
+    result = f(x_nodes[0]) + f(x_nodes[-1])
+    temp_1, temp_2 = 0, 0
+    for i in range(len(x_nodes)):
+        if i % 2 == 0:
+            temp_1 += f(x_nodes[i])
+        else:
+            temp_2 += f(x_nodes[i])
+    result += temp_1 * 2 + temp_2 * 4
+    aboba = ((x_nodes[-1] - x_nodes[0]) / len(x_nodes)) / 3
+
+    result *= aboba
+    return result
+
+
 def rectangle(x_nodes, func, f):
     summ = 0
     for i in range(len(x_nodes) - 1):
@@ -40,6 +55,9 @@ def main():
         table.add_row([n, result_trapeziod, result_rectangle,
                        abs(pi - result_trapeziod), abs(pi - result_rectangle)])
     print(table)
+
+    h_nodes = [i / n for i in range(a * n, b * n + 1)]
+    print(simson(h_nodes))
 
 
 if __name__ == "__main__":
