@@ -23,6 +23,10 @@ def simson(x_nodes):
     return result
 
 
+def interpolation():
+    pass
+
+
 def main():
     a = 0
     b = 4
