@@ -17,7 +17,7 @@ def print_graphic(x_values, y_values):
     plt.xlim(-5, 5)
     plt.ylim(-5, 5)
     plt.gca().set_aspect('equal')  # Установка равного масштаба по осям
-    plt.title('Окружность')
+    plt.title(f'Фигура: A={A}, B={B}')
     plt.grid()
     plt.show()
 
@@ -31,44 +31,49 @@ def task_1():
 
     x_values = [r * math.cos(phi) for r, phi in zip(r_list, phi_list)]
     y_values = [r * math.sin(phi) for r, phi in zip(r_list, phi_list)]
-    a = max(x_values) + abs(min(x_values))
-    b = round(max(y_values) + abs(min(y_values)), 3)
-    print(f"Прямоугольник размером {a} × {
-          b}, в котором целиком находится фигура\n\n")
     return x_values, y_values
 
 
-def bobr_kurva(x_values, y_values):
-    n = 100
+def bobr_kurva(x_values, y_values, num_points=1000):
     mini_x, maxi_x = min(x_values), max(x_values)
     mini_y, maxi_y = min(y_values), max(y_values)
-    random_dots = [{
-        "x": random.uniform(mini_x, maxi_x),
-        "y": random.uniform(mini_y, maxi_y)
-    } for _ in range(n)]
-    m = 0
-    for temp_dict in random_dots:
-        x = temp_dict["x"]
-        y = temp_dict["y"]
-        if x > 0:
-            phi = math.atan(y / x)
-        elif x < 0:
-            phi = math.pi + math.atan(y / x)
-        elif x == 0 and y > 0:
-            phi = math.py / 2
-        elif x == 0 and y < 0:
-            phi = - math.py / 2
-        elif x == 0 and y == 0:
+
+    # Площадь ограничивающего прямоугольника
+    rect_area = (maxi_x - mini_x) * (maxi_y - mini_y)
+
+    inside_count = 0
+
+    for _ in range(num_points):
+        x = random.uniform(mini_x, maxi_x)
+        y = random.uniform(mini_y, maxi_y)
+
+        # Переводим в полярные координаты
+        r = math.sqrt(x ** 2 + y ** 2)
+        if r == 0:
             phi = 0
-    pi = 4 * m / n
-    print(pi, "Примерное число pi")
-    return m
+        else:
+            phi = math.atan2(y, x) % (2 * math.pi)
+
+        # Проверяем, находится ли точка внутри фигуры
+        if r <= rho(phi):
+            inside_count += 1
+
+    # Вычисляем площадь фигуры
+    area = rect_area * inside_count / num_points
+    return area
 
 
 def main():
     x_values, y_values = task_1()
-    # m = bobr_kurva(x_values, y_values)
-    # print(m)
+    area = bobr_kurva(x_values, y_values)
+
+    # Создаем таблицу для вывода результатов
+    table = PrettyTable()
+    table.field_names = ["Параметр", "Значение"]
+    table.add_row(["Размер прямоугольника",
+                   f"{round(max(x_values) - min(x_values), 3)} × {round(max(y_values) - min(y_values), 3)}"])
+    table.add_row(["Приближенная площадь", f"{round(area, 3)}"])
+    print(table)
 
     print_graphic(x_values, y_values)
 

@@ -30,7 +30,7 @@ def task_1():
     a = 2 * n
     b = 2 * n
     print(f"Прямоугольник размером {a} × {
-          b}, в котором целиком находится фигура\n\n")
+    b}, в котором целиком находится фигура\n\n")
     return x_values, y_values
 
 
@@ -50,13 +50,13 @@ def bobr_kurva(x_values, y_values):
             m += 1
     pi = 4 * m / n
     print(pi, "Примерное число pi")
+    print(f"{m} из {n} точек находятся в окружности")
     return m
 
 
 def main():
     x_values, y_values = task_1()
     m = bobr_kurva(x_values, y_values)
-    print(m)
 
     print_graphic(x_values, y_values)
 
