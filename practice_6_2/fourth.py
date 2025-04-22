@@ -42,6 +42,8 @@ def bobr_kurva(x_values, y_values, num_points=1000):
     rect_area = (maxi_x - mini_x) * (maxi_y - mini_y)
 
     inside_count = 0
+    inside_dots = []
+    outside_dots = []
 
     for _ in range(num_points):
         x = random.uniform(mini_x, maxi_x)
@@ -57,9 +59,44 @@ def bobr_kurva(x_values, y_values, num_points=1000):
         # Проверяем, находится ли точка внутри фигуры
         if r <= rho(phi):
             inside_count += 1
+            inside_dots.append((x, y))  # Сохраняем точки внутри фигуры
+        else:
+            outside_dots.append((x, y))  # Сохраняем точки вне фигуры
 
     # Вычисляем площадь фигуры
     area = rect_area * inside_count / num_points
+
+    # Визуализация
+    plt.figure(figsize=(8, 8))
+
+    # Рисуем ограничивающий прямоугольник
+    plt.plot([mini_x, maxi_x, maxi_x, mini_x, mini_x], [mini_y, mini_y, maxi_y, maxi_y,
+             mini_y], color='black', linestyle='--', label='Ограничивающий прямоугольник')
+
+    # Рисуем фигуру
+    theta = [i * 0.01 for i in range(628)]  # 0 до 2*pi
+    x_fig = [rho(t) * math.cos(t) for t in theta]
+    y_fig = [rho(t) * math.sin(t) for t in theta]
+    plt.plot(x_fig, y_fig, color='blue', label='Фигура')
+
+    # Рисуем случайные точки
+    for dot in inside_dots:
+        plt.scatter(dot[0], dot[1], color='red')  # Точки внутри фигуры
+    for dot in outside_dots:
+        plt.scatter(dot[0], dot[1], color='green')  # Точки вне фигуры
+
+    plt.xlim(mini_x - 1, maxi_x + 1)
+    plt.ylim(mini_y - 1, maxi_y + 1)
+    plt.axhline(0, color='black', linewidth=0.5, ls='--')
+    plt.axvline(0, color='black', linewidth=0.5, ls='--')
+    plt.grid(color='gray', linestyle='--', linewidth=0.5)
+    plt.title('Случайные точки и фигура')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.legend()
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.show()
+
     return area
 
 
@@ -75,7 +112,7 @@ def main():
     table.add_row(["Приближенная площадь", f"{round(area, 3)}"])
     print(table)
 
-    print_graphic(x_values, y_values)
+    # print_graphic(x_values, y_values)
 
 
 if __name__ == "__main__":
