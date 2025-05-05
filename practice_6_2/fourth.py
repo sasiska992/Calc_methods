@@ -16,7 +16,7 @@ def print_graphic(x_values, y_values):
     plt.plot(x_values, y_values)
     plt.xlim(-5, 5)
     plt.ylim(-5, 5)
-    plt.gca().set_aspect('equal')  # Установка равного масштаба по осям
+    plt.gca().set_aspect('equal')
     plt.title(f'Фигура: A={A}, B={B}')
     plt.grid()
     plt.show()
@@ -38,7 +38,6 @@ def bobr_kurva(x_values, y_values, num_points=1000):
     mini_x, maxi_x = min(x_values), max(x_values)
     mini_y, maxi_y = min(y_values), max(y_values)
 
-    # Площадь ограничивающего прямоугольника
     rect_area = (maxi_x - mini_x) * (maxi_y - mini_y)
 
     inside_count = 0
@@ -49,41 +48,33 @@ def bobr_kurva(x_values, y_values, num_points=1000):
         x = random.uniform(mini_x, maxi_x)
         y = random.uniform(mini_y, maxi_y)
 
-        # Переводим в полярные координаты
         r = math.sqrt(x ** 2 + y ** 2)
         if r == 0:
             phi = 0
         else:
             phi = math.atan2(y, x) % (2 * math.pi)
 
-        # Проверяем, находится ли точка внутри фигуры
         if r <= rho(phi):
             inside_count += 1
-            inside_dots.append((x, y))  # Сохраняем точки внутри фигуры
+            inside_dots.append((x, y))
         else:
-            outside_dots.append((x, y))  # Сохраняем точки вне фигуры
+            outside_dots.append((x, y))
 
-    # Вычисляем площадь фигуры
     area = rect_area * inside_count / num_points
 
-    # Визуализация
     plt.figure(figsize=(8, 8))
 
-    # Рисуем ограничивающий прямоугольник
-    plt.plot([mini_x, maxi_x, maxi_x, mini_x, mini_x], [mini_y, mini_y, maxi_y, maxi_y,
-             mini_y], color='black', linestyle='--', label='Ограничивающий прямоугольник')
+    plt.plot([mini_x, maxi_x, maxi_x, mini_x, mini_x], [mini_y, mini_y, maxi_y, maxi_y, mini_y], color='black', linestyle='--', label='Ограничивающий прямоугольник')
 
-    # Рисуем фигуру
-    theta = [i * 0.01 for i in range(628)]  # 0 до 2*pi
+    theta = [i * 0.01 for i in range(628)]
     x_fig = [rho(t) * math.cos(t) for t in theta]
     y_fig = [rho(t) * math.sin(t) for t in theta]
     plt.plot(x_fig, y_fig, color='blue', label='Фигура')
 
-    # Рисуем случайные точки
     for dot in inside_dots:
-        plt.scatter(dot[0], dot[1], color='red')  # Точки внутри фигуры
+        plt.scatter(dot[0], dot[1], color='red')
     for dot in outside_dots:
-        plt.scatter(dot[0], dot[1], color='green')  # Точки вне фигуры
+        plt.scatter(dot[0], dot[1], color='green')
 
     plt.xlim(mini_x - 1, maxi_x + 1)
     plt.ylim(mini_y - 1, maxi_y + 1)
@@ -104,7 +95,6 @@ def main():
     x_values, y_values = task_1()
     area = bobr_kurva(x_values, y_values)
 
-    # Создаем таблицу для вывода результатов
     table = PrettyTable()
     table.field_names = ["Параметр", "Значение"]
     table.add_row(["Размер прямоугольника",

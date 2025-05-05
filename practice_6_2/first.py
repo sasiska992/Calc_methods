@@ -47,8 +47,7 @@ def task_1():
 
     a = max(x_values)
     b = max(y_values)
-    print(f"Прямоугольник размером {a} × {
-          b}, в котором целиком находится фигура\n\n")
+    print(f"Прямоугольник размером {a} × {b}, в котором целиком находится фигура\n\n")
     return x_values, y_values
 
 
@@ -61,9 +60,19 @@ def task_2_3_4(x_values, y_values):
         "y": random.uniform(0, b)
     } for _ in range(n)]
     m = 0
+    inside_dots = []
+    outside_dots = []
     for temp_dict in random_dots:
         if temp_dict["y"] < f(temp_dict["x"], 5) and f(temp_dict["x"], 5) is not None:
             m += 1
+            inside_dots.append(temp_dict)
+        else:
+            outside_dots.append(temp_dict)
+
+    for dot in inside_dots:
+        plt.scatter(dot["x"], dot["y"], color='red')
+    for dot in outside_dots:
+        plt.scatter(dot["x"], dot["y"], color='green')
     print(m, "- рандомных точек находится внутри фигуры")
     s = m / n * a * b
     print(s, "примерная площадь по этим точкам")
@@ -76,7 +85,7 @@ def task_2_3_4(x_values, y_values):
     table = PrettyTable(
         ["Относительная погрешность", "Абсолютная погрешность"])
     table.add_row([round(abs(real_s - s), 3),
-                  f"{round(abs(real_s - s) / s * 100, 3)}%"])
+                   f"{round(abs(real_s - s) / s * 100, 3)}%"])
     print(table)
 
 
