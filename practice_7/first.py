@@ -6,7 +6,7 @@ from prettytable import PrettyTable
 
 
 def f(x):
-    return (2 / math.sqrt(math.pi)) * math.exp(-x ** 2)
+    return (2 / math.sqrt(math.pi)) * math.exp(-(x**2))
 
 
 def func(h, x_start, y_start, x_end):
@@ -26,17 +26,19 @@ def func(h, x_start, y_start, x_end):
 def main(x_values):
     x_start = 0
     y_start = 0
-    table = PrettyTable(["x", "y`", "erf(x)"])
+    table = PrettyTable(["x", "y`", "erf(x)", "Разница"])
     start = time.time()
     for i in range(len(x_values)):
-        table.add_row([x_values[i], func(0.1, x_start, y_start, x_values[i]), math.erf(x_values[i])])
+        a = func(0.1, x_start, y_start, x_values[i])
+        b = math.erf(x_values[i])
+        table.add_row([x_values[i], a, b, abs(a - b)])
 
     end = time.time()
     print(table)
     return end - start
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     x_values = [i / 10 for i in range(0, 21)]
     time_table = PrettyTable(["ОДУ", "Метод средних прямоугольников", "Разница"])
     odu = main(x_values)
