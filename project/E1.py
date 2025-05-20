@@ -6,31 +6,24 @@ def exact_solution(x, t):
     return math.exp(-t) * math.sin(x)
 
 
-def gauss_elimination(A, b):
-    n = len(b)
+def bib_bob(a, b, c, d):
+    n = len(d)
 
-    for i in range(n):
-        pivot = A[i][i]
-        for j in range(i, n):
-            A[i][j] /= pivot
-        b[i] /= pivot
-
-        for k in range(i + 1, n):
-            factor = A[k][i]
-            for j in range(i, n):
-                A[k][j] -= factor * A[i][j]
-            b[k] -= factor * b[i]
+    for i in range(1, n):
+        m = a[i - 1] / b[i - 1]
+        b[i] = b[i] - m * c[i - 1]
+        d[i] = d[i] - m * d[i - 1]
 
     x = [0.0 for _ in range(n)]
-    for i in range(n - 1, -1, -1):
-        x[i] = b[i]
-        for j in range(i + 1, n):
-            x[i] -= A[i][j] * x[j]
+    x[-1] = d[-1] / b[-1]
+
+    for i in range(n - 2, -1, -1):
+        x[i] = (d[i] - c[i] * x[i + 1]) / b[i]
 
     return x
 
 
-def solve_heat_equation(T=1.0, L=math.pi / 2, N=20, M=100, scheme='explicit'):
+def solve_heat_equation(T=1.0, L=math.pi / 2, N=20, M=100, scheme="explicit"):
     """
     T - конечное время
     L - длина области по x
@@ -40,11 +33,13 @@ def solve_heat_equation(T=1.0, L=math.pi / 2, N=20, M=100, scheme='explicit'):
     """
     h = L / (N - 1)  # шаг по пространству
     tau = T / (M - 1)  # шаг по времени
-    r = tau / (h ** 2)  # коэффициент устойчивости
+    r = tau / (h**2)  # коэффициент устойчивости
 
     # Проверка устойчивости для явной схемы
-    if scheme == 'explicit' and r > 0.5:
-        print(f"Внимание: коэффициент r = {r:.3f} > 0.5, явная схема может быть неустойчивой")
+    if scheme == "explicit" and r > 0.5:
+        print(
+            f"Внимание: коэффициент r = {r:.3f} > 0.5, явная схема может быть неустойчивой"
+        )
 
     # Здеся инициализируем сетку решения
     u = [[0 for i in range(N)] for j in range(M)]
@@ -61,7 +56,7 @@ def solve_heat_equation(T=1.0, L=math.pi / 2, N=20, M=100, scheme='explicit'):
         u[j][N - 1] = math.exp(-t[j])  # u(L,t) = e^(-t)
 
     # Численное решение
-    if scheme == 'explicit':
+    if scheme == "explicit":
         # Явная схема
         for j in range(M - 1):
             for i in range(1, N - 1):
@@ -70,28 +65,26 @@ def solve_heat_equation(T=1.0, L=math.pi / 2, N=20, M=100, scheme='explicit'):
         # Неявная схема
         for j in range(M - 1):
             # Тута происходит формирование матрицы системы и правой части
-            A = [[0.0 for _ in range(N)] for _ in range(N)]
-            b = [0.0 for _ in range(N)]
+            a = [-r for _ in range(N - 1)]  # Элементы под диагональю
+            b = [1 + 2 * r for _ in range(N)]  # главная диагональ
+            c = [-r for _ in range(N - 1)]  # верхняя диагональ
+            d = [0.0 for _ in range(N)]
 
-            # Тута граничные условия
-            A[0][0] = 1.0
-            b[0] = 0.0  # u(0,t) = 0
+            # Граничные условия
+            b[0] = 1.0
+            c[0] = 0.0
+            d[0] = 0.0  # u(0,t) = 0
 
-            A[N - 1][N - 1] = 1.0
-            b[N - 1] = math.exp(-t[j + 1])  # u(L,t) = e^(-t)
+            b[-1] = 1.0
+            a[-1] = 0.0
+            d[-1] = math.exp(-t[j + 1])  # u(L,t) = e^(-t)
 
-            # Тута уравнения для внутренних узлов
+            # Правая часть для внутренних узлов
             for i in range(1, N - 1):
-                A[i][i - 1] = -r
-                A[i][i] = 1 + 2 * r
-                A[i][i + 1] = -r
-                b[i] = u[j][i]
+                d[i] = u[j][i]
 
-            # Тута решаем систему методом Гаусса.
-            # В этом векторе находятся значения температуры на следующем временном слое
-            u_new = gauss_elimination(A, b)
+            u_new = bib_bob(a, b, c, d)
 
-            # Обновляем решения, пользуясь новой матрицей
             for i in range(N):
                 u[j + 1][i] = u_new[i]
 
@@ -104,15 +97,15 @@ def plot_results(x, t, u, T, scheme_name):
     # Выбираем несколько времён
     time_indices = [0, len(t) // 4, len(t) // 2, 3 * len(t) // 4, len(t) - 1]
     for idx in time_indices:
-        plt.plot(x, u[idx], label=f't = {t[idx]:.2f}')
+        plt.plot(x, u[idx], label=f"t = {t[idx]:.2f}")
 
     # Точное решение в конечный момент времени
     exact = [exact_solution(xi, T) for xi in x]
-    plt.plot(x, exact, 'k--', linewidth=2, label='Точное решение (t=T)')
+    plt.plot(x, exact, "k--", linewidth=2, label="Точное решение (t=T)")
 
-    plt.title(f'Решение уравнения теплопроводности ({scheme_name} схема)')
-    plt.xlabel('Координата x')
-    plt.ylabel('Температура u(x,t)')
+    plt.title(f"Решение уравнения теплопроводности ({scheme_name} схема)")
+    plt.xlabel("Координата x")
+    plt.ylabel("Температура u(x,t)")
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -132,30 +125,26 @@ def calculate_errors(u, x, t):
 
 
 def main():
-    # Параметры расчета
-    T = 3.0  # Конечное время
+    T = 1.0  # Конечное время
     L = math.pi / 2  # Длина области
-    N = 20  # Число узлов по пространству
-    M = 100  # Число узлов по времени
+    N = 15  # Число узлов по пространству
+    M = 15000  # Число узлов по времени
 
     print("=== Решение уравнения теплопроводности ===")
     print(f"Параметры: T = {T}, N = {N}, M = {M}")
 
-    # Явная схема
     print("\nРасчет по явной схеме...")
-    x, t, u_explicit = solve_heat_equation(T, L, N, M, 'explicit')
-    plot_results(x, t, u_explicit, T, 'Явная')
+    x, t, u_explicit = solve_heat_equation(T, L, N, M, "explicit")
+    plot_results(x, t, u_explicit, T, "Явная")
     error_explicit = calculate_errors(u_explicit, x, t)
     print(f"Максимальная ошибка: {error_explicit:.6f}")
 
-    # Неявная схема
     print("\nРасчет по неявной схеме (метод Гаусса)...")
-    x, t, u_implicit = solve_heat_equation(T, L, N, M, 'implicit')
-    plot_results(x, t, u_implicit, T, 'Неявная')
+    x, t, u_implicit = solve_heat_equation(T, L, N, M, "implicit")
+    plot_results(x, t, u_implicit, T, "Неявная")
     error_implicit = calculate_errors(u_implicit, x, t)
     print(f"Максимальная ошибка: {error_implicit:.6f}")
 
-    # Сравнение ошибок
     print("\nСравнение ошибок:")
     print(f"Явная схема: {error_explicit:.6f}")
     print(f"Неявная схема: {error_implicit:.6f}")
