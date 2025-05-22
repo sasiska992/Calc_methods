@@ -33,7 +33,7 @@ def solve_heat_equation(T=1.0, L=math.pi / 2, N=20, M=100, scheme="explicit"):
     """
     h = L / (N - 1)  # шаг по пространству
     tau = T / (M - 1)  # шаг по времени
-    r = tau / (h**2)  # коэффициент устойчивости
+    r = tau / (h ** 2)  # коэффициент устойчивости
 
     if scheme == "explicit" and r > 0.5:
         print(
@@ -138,7 +138,7 @@ def main():
     error_explicit = calculate_errors(u_explicit, x, t)
     print(f"Максимальная ошибка: {error_explicit:.6f}")
 
-    print("\nРасчет по неявной схеме (метод Гаусса)...")
+    print("\nРасчет по неявной схеме...")
     x, t, u_implicit = solve_heat_equation(T, L, N, M, "implicit")
     plot_results(x, t, u_implicit, T, "Неявная")
     error_implicit = calculate_errors(u_implicit, x, t)
